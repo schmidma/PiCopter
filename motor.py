@@ -1,5 +1,5 @@
 ##########################################
-##	Motor.py - Motor-Klasse		##
+##	motor.py - Motor-Klasse		##
 ##########################################
 
 class Motor (object):
