@@ -48,6 +48,9 @@ class Sonar (object):
                 # und durch 2 teilen, da hin und zurueck
                 distance = (TimeElapsed * 34300) / 2
                 
+		#Benutzte GPIO-Ports wieder freigeben - Sonst Fehlermeldungen bei erneutem Aufruf
+		GPIO.cleanup()
+
                 return distance
                  
 
