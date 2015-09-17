@@ -1,7 +1,7 @@
 # coding: utf-8
 
 ##########################################
-gyro.py - Gyroskop-Klasse
+# accel.py - Gyroskop-Klasse
 ##########################################
 
 #IMPORT
