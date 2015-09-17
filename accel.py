@@ -19,7 +19,7 @@ class Accel (object):
 		
 	def config(self):
 		#enable the accelerometer
-		self.__i2c_bus.write_byte_data(i2c_address,0x2D,0x08)
+		self.__i2c_bus.write_byte_data(self.i2c_address,0x2D,0x08)
 		
 	def readList(self):
 		result = self.__i2c_bus.read_i2c_block_data(self.i2c_address, 0x32, 6)
