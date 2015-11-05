@@ -33,10 +33,12 @@ class Main():
         
         self.motors = [self.m1, self.m2, self.m3, self.m4]
         
+        print ("IDLE")
         self.idle()
         
     def idle(self):
         if self.gamepad.isStart():
+            print ("START")
             self.start()
             self.changeMotorSpeed()
         
