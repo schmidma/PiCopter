@@ -37,12 +37,12 @@ class Main():
         self.idle()
         
     def idle(self):
-        if self.gamepad.isStart():
-            print ("START")
-            self.start()
-            self.changeMotorSpeed()
-        
-        self.idle()
+        while not self.gamepad.isStart():
+            print ("IDLE")
+        #if self.gamepad.isStart():
+        print ("START")
+        self.start()
+        self.changeMotorSpeed()
         
     def getGamepadValues(self):
         self.gamepad_axis = self.gamepad.getAxis()
@@ -71,27 +71,25 @@ class Main():
             m.start()
         
     def changeMotorSpeed(self):
-        self.getGamepadValues()
-        self.getAccelValues()
-        
-        if (self.holdHeight):
-            print ("HoldHeight!")
-        else:
-            self.main_throttle = self.gamepad_throttle
-        
-        self.accel_diff = [self.accel_axis[i]-self.accel_calib[i] for i in range (4)]
-        
-        self.throttle[0] += self.accel_diff[0]
-        self.throttle[1] += self.accel_diff[1]
-        self.throttle[2] -= self.accel_diff[2]
-        self.throttle[3] -= self.accel_diff[3]
-        
-        print (self.main_throttle)
-        print (self.throttle)
-        #for i in range(4):
-        #    self.motors[i].setW(self.main_throttle+self.throttle[i])
-        
-        if gamepad.isStart():
-            self.changeMotorSpeed()
-        else:
-            self.idle()
+        while self.gamepad.isStart():
+            self.getGamepadValues()
+            self.getAccelValues()
+            
+            if (self.holdHeight):
+                print ("HoldHeight!")
+            else:
+                self.main_throttle = self.gamepad_throttle
+            
+            self.accel_diff = [self.accel_axis[i]-self.accel_calib[i] for i in range (4)]
+            
+            self.throttle[0] += self.accel_diff[0]
+            self.throttle[1] += self.accel_diff[1]
+            self.throttle[2] -= self.accel_diff[2]
+            self.throttle[3] -= self.accel_diff[3]
+            
+            print (self.main_throttle)
+            print (self.throttle)
+            #for i in range(4):
+            #    self.motors[i].setW(self.main_throttle+self.throttle[i])
+            
+        self.idle()
