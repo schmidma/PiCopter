@@ -29,28 +29,36 @@ class Gamepad():
         self.bThrottle = 13
     
     def isCalibFront(self):
+        pygame.event.pump()
         return self.pad.get_button(self.bCalibFront)
     
     def isCalibRear(self):
+        pygame.event.pump()
         return self.pad.get_button(self.bCalibRear)
     
     def isCalibRight(self):
+        pygame.event.pump()
         return self.pad.get_button(self.bCalibRight)
     
     def isCalibLeft(self):
+        pygame.event.pump()
         return self.pad.get_button(self.bCalibLeft)
     
     def isStart(self):
-        if self.pad.get_button(self.bStart):
+        pygame.event.pump()
+        start = self.pad.get_button(self.bStart)
+        if start==1:
             self.start = not self.start
         return self.start
     
     def isHoldHeight(self):
+        pygame.event.pump()
         if self.pad.get_button(self.bHoldHeight):
             self.holdHeight = not self.holdHeight
         return self.holdHeight
     
     def isHoldPosition(self):
+        pygame.event.pump()
         if self.pad.get_button(self.bHoldPosition):
             self.holdPosition = not self.holdPosition
         return self.holdPosition
