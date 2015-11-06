@@ -9,6 +9,7 @@ import pygame
 class Gamepad():
     def __init__(self):
         pygame.init()
+	self.clock = pygame.time.Clock()
         self.pad = pygame.joystick.Joystick(0)
         self.pad.init()
         
@@ -22,6 +23,7 @@ class Gamepad():
         self.bCalibRear = 6
         self.bCalibRight =5
         self.bCalibLeft = 7
+        self.bCalib = 0
         
         self.bStart = 3
         self.bHoldHeight = 12
@@ -43,12 +45,17 @@ class Gamepad():
     def isCalibLeft(self):
         pygame.event.pump()
         return self.pad.get_button(self.bCalibLeft)
-    
+
+    def isCalib(self):
+        pygame.event.pump()
+        return self.pad.get_button(self.bCalib)    
+
     def isStart(self):
         pygame.event.pump()
         start = self.pad.get_button(self.bStart)
         if start==1:
             self.start = not self.start
+        self.clock.tick(60)
         return self.start
     
     def isHoldHeight(self):

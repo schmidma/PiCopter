@@ -22,17 +22,17 @@ class Main():
         self.gamepad_axis = [0,0,0]
         self.gamepad_throttle = 0
         
-#        self.accel = Accel()
+        self.accel = Accel()
         self.accel_axis = [0,0,0]
         self.accel_calib = [0,0,0]
         self.accel_diff = [0,0,0]
         
-#        self.m1 = Motor(15)
-#        self.m2 = Motor(27)
-#        self.m3 = Motor(10)
-#        self.m4 = Motor(7)
+        self.m1 = Motor(15)
+        self.m2 = Motor(27)
+        self.m3 = Motor(10)
+        self.m4 = Motor(7)
         
-#        self.motors = [self.m1, self.m2, self.m3, self.m4]
+        self.motors = [self.m1, self.m2, self.m3, self.m4]
         
         print ("IDLE")
         self.idle()
@@ -48,28 +48,33 @@ class Main():
     def getGamepadValues(self):
         self.gamepad_axis = self.gamepad.getAxis()
         if self.gamepad.isCalibFront():
-            self.accel_calib[0] += 1
+            self.accel.addToCalibrationValues([1,0,0])
         if self.gamepad.isCalibRear():
-            self.accel_calib[0] -= 1
+            self.accel.addToCalibrationValues([-1,0,0])
         if self.gamepad.isCalibRight():
-            self.accel_calib[1] += 1
+            self.accel.addToCalibrationValues([0,1,0])
         if self.gamepad.isCalibLeft():
-            self.accel_calib[1] -= 1
+            self.accel.addToCalibrationValues([0,-1,0])
+        if self.gamepad.isCalib():
+            self.accel.calibrateAccel()
         self.gamepad_throttle = self.gamepad.getThrottle()
         self.holdPosition = self.gamepad.isHoldPosition()
         self.holdHeight = self.gamepad.isHoldHeight()
         
     def getAccelValues(self):
-        #accel_result = self.accel.getResult()
-        #calibrateValues = self.accel.getCalibrateValues()
+        accel_result = self.accel.getResult(1)
+        calibrationValues = self.accel.getCalibrationValues()
         #self.accel_axis = [accel_result[0]-calibrateValues[0], accel_result[1]-calibrateValues[1], accel_result[2]-calibrateValues[2]]
-        #self.accel_axis = [accel_result[i]-calibrateValues[i] for i in range(3)]
-        pass
+        self.accel_axis = [accel_result[i]+calibrationValues[i] for i in range(3)]
         
         
     def start(self):
-        #for m in self.motors:
-        #    m.start()
+        while self.gamepad.getThrottle()<=50:
+            print("Throttle to min 50")
+        while self.gamepad.getThrottle()!=0:
+            print("Throttle to 0 to start!")
+        for m in self.motors:
+            m.start()
         print("START")
         
     def changeMotorSpeed(self):
@@ -82,7 +87,7 @@ class Main():
             else:
                 self.main_throttle = self.gamepad_throttle
             
-            self.accel_diff = [self.accel_axis[i]-self.accel_calib[i] for i in range (3)]
+            self.accel_diff = [(self.accel.getResult(1)[i]+self.accel.getCalibrationValues()[i])/10 for i in range (3)]
             
             self.throttle[0] += self.accel_diff[0]
             self.throttle[1] += self.accel_diff[0]
@@ -93,11 +98,20 @@ class Main():
             self.throttle[1] += self.accel_diff[1]
             self.throttle[2] += self.accel_diff[1]
             self.throttle[3] -= self.accel_diff[1]
-    
+
+            print(self.accel.getResult(0))
+            print(self.accel.getCalibrationValues())
+            print(self.accel_diff)
+
             print (self.main_throttle)
             print (self.throttle)
-            #for i in range(4):
-            #    self.motors[i].setW(self.main_throttle+self.throttle[i])
+            for i in range(4):
+#                print(int(self.main_throttle+self.throttle[i]))
+                mthrottle = int(self.main_throttle+self.throttle[i])
+                print(mthrottle)
+                #self.motors[i].setW(int(self.main_throttle+self.throttle[i]))
+                self.motors[i].setW(mthrottle)
+            self.throttle = [0,0,0,0]
         self.idle()
 
 go = Main()

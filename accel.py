@@ -28,7 +28,7 @@ class Accel ():
 		#Setze das POWER_CTL auf 0x08 (00001000) - Measurement mode
 		self.__i2c_bus.write_byte_data(self.i2c_address, 0x2D, 0x08)
 		
-		self.calibrateValues = [0,0,0]
+		self.calibrationValues = [0,0,0]
 
 	#Definiere read-Methode zum Auslesen der Achsen-Werte
 	def read(self):
@@ -77,7 +77,12 @@ class Accel ():
 	
 	def calibrateAccel(self):
 		result = self.getResult(1)
-		self.calibrateValues = [-result[0], -result[1], -result[2]]
+		self.calibrationValues = [-result[0], -result[1], -result[2]]
 		
-	def getCalibrateValues(self):
-		return self.calibrateValues
+	def getCalibrationValues(self):
+		return self.calibrationValues
+	
+        def addToCalibrationValues(self,add_array):
+#                [self.calibrationValues[i] += add_array[i] for i in range(3)]
+                for i in range(3):
+                    self.calibrationValues[i] += add_array[i]
