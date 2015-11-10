@@ -88,6 +88,10 @@ class Main():
                 self.main_throttle = self.gamepad_throttle
             
             self.accel_diff = [(self.accel.getResult(1)[i]+self.accel.getCalibrationValues()[i])/10 for i in range (3)]
+            for i in range(3):
+                if self.accel_diff[i] > 10:
+                    self.accel_diff[i] = 10
+            
             
             self.throttle[0] += self.accel_diff[0]
             self.throttle[1] += self.accel_diff[0]
@@ -105,11 +109,13 @@ class Main():
 
             print (self.main_throttle)
             print (self.throttle)
+        
             for i in range(4):
-#                print(int(self.main_throttle+self.throttle[i]))
-                mthrottle = int(self.main_throttle+self.throttle[i])
+                if self.main_throttle > 0:
+                    mthrottle = int(self.main_throttle+self.throttle[i])
+                else:
+                    mthrottle = int(0)
                 print(mthrottle)
-                #self.motors[i].setW(int(self.main_throttle+self.throttle[i]))
                 self.motors[i].setW(mthrottle)
             self.throttle = [0,0,0,0]
         self.idle()
