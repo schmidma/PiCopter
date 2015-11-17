@@ -92,7 +92,7 @@ class Main():
                 if self.accel_diff[i] > 10:
                     self.accel_diff[i] = 10
             
-            
+            #Accel-Motor-Steuereung
             self.throttle[0] += self.accel_diff[0]
             self.throttle[1] += self.accel_diff[0]
             self.throttle[2] -= self.accel_diff[0]
@@ -102,6 +102,17 @@ class Main():
             self.throttle[1] += self.accel_diff[1]
             self.throttle[2] += self.accel_diff[1]
             self.throttle[3] -= self.accel_diff[1]
+
+            #Pad-Motor-Steuerung
+            self.throttle[0] += self.gamepad_axis[1]*10
+            self.throttle[1] += self.gamepad_axis[1]*10
+            self.throttle[2] -= self.gamepad_axis[1]*10
+            self.throttle[3] -= self.gamepad_axis[1]*10
+    
+            self.throttle[0] += self.gamepad_axis[0]*10
+            self.throttle[1] -= self.gamepad_axis[0]*10
+            self.throttle[2] -= self.gamepad_axis[0]*10
+            self.throttle[3] += self.gamepad_axis[0]*10
 
             print(self.accel.getResult(0))
             print(self.accel.getCalibrationValues())

@@ -9,7 +9,7 @@ import pygame
 class Gamepad():
     def __init__(self):
         pygame.init()
-	self.clock = pygame.time.Clock()
+        self.clock = pygame.time.Clock()
         self.pad = pygame.joystick.Joystick(0)
         self.pad.init()
         
@@ -24,6 +24,8 @@ class Gamepad():
         self.bCalibRight =5
         self.bCalibLeft = 7
         self.bCalib = 0
+        self.bXAxis = 0
+        self.bYAxis = 1
         
         self.bStart = 3
         self.bHoldHeight = 12
@@ -76,4 +78,6 @@ class Gamepad():
         return self.throttle
     
     def getAxis(self):
-        pass
+        pygame.event.pump()
+        self.axis = [self.pad.get_axis(self.bXAxis),self.pad.get_axis(self.bYAxis),0]
+        return self.axis
