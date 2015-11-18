@@ -26,6 +26,7 @@ class Main():
         self.accel_axis = [0,0,0]
         self.accel_calib = [0,0,0]
         self.accel_diff = [0,0,0]
+        self.accel_throttle = [0,0,0]
         
         self.m1 = Motor(15)
         self.m2 = Motor(27)
@@ -87,10 +88,26 @@ class Main():
             else:
                 self.main_throttle = self.gamepad_throttle
             
-            self.accel_diff = [(self.accel.getResult(1)[i]+self.accel.getCalibrationValues()[i])/10 for i in range (3)]
+            self.accel_diff = [(self.accel.getResult(1)[i]+self.accel.getCalibrationValues()[i])/260*100 for i in range (3)]
+            
+            #Beschränkung auf maximal 10% Einfluss
             for i in range(3):
                 if self.accel_diff[i] > 10:
                     self.accel_diff[i] = 10
+                elif self.accel_diff[i] < -10:
+                    self.accel_diff[i] = -10
+                    
+                if self.accel_diff[i] > 0:
+                    if self.accel_diff[i] > self.accel_throttle[i]:
+                        self.accel_throttle[i] += 1
+                    else:
+                        self.accel_throttle[i] -= 1
+                elif self.accel_diff[i] < 0:
+                    if self.accel_diff[i] < self.accel_throttle[i]:
+                        self.accel_throttle[i] -= 1
+                    else:
+                        self.accel_throttle[i] += 1
+            
             
             #Accel-Motor-Steuereung
             self.throttle[0] += self.accel_diff[0]
