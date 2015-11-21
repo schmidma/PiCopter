@@ -82,7 +82,7 @@ class Accel ():
 	def getCalibrationValues(self):
 		return self.calibrationValues
 	
-        def addToCalibrationValues(self,add_array):
+	def addToCalibrationValues(self,add_array):
 #                [self.calibrationValues[i] += add_array[i] for i in range(3)]
-                for i in range(3):
-                    self.calibrationValues[i] += add_array[i]
+		for i in range(3):
+			self.calibrationValues[i] += add_array[i]

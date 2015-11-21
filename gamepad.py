@@ -13,9 +13,13 @@ class Gamepad():
         self.pad = pygame.joystick.Joystick(0)
         self.pad.init()
         
-        self.start = 0
-        self.holdHeight = 0
-        self.holdPosition = 0
+        self.calibrationValues = [0,0,0]
+        
+        self.isStart = 0
+        self.isCalib = 0
+        self.isHoldHeight = 0
+        self.isHoldPosition = 0
+        self.isAccel = 0
         self.throttle = 0
         self.axis = [0,0,0]
         
@@ -24,60 +28,65 @@ class Gamepad():
         self.bCalibRight =5
         self.bCalibLeft = 7
         self.bCalib = 0
-        self.bXAxis = 0
-        self.bYAxis = 1
+        self.aXAxis = 0
+        self.aYAxis = 1
         
         self.bStart = 3
+        self.bHome = 16
         self.bHoldHeight = 12
         self.bHoldPosition = 13
-        self.bThrottle = 13
+        self.bAccel = 15
+        self.aThrottle = 13
     
-    def isCalibFront(self):
-        pygame.event.pump()
-        return self.pad.get_button(self.bCalibFront)
+    def handleButtonDown(self, button):
+        if button == self.bStart:
+            self.toggleStart()
+        elif button == self.bHoldHeight:
+            self.toggleHoldHeight()
+            #print("holdHeight: "+str(self.isHoldHeight))
+        elif button == self.bHoldPosition:
+            self.toggleHoldPosition()
+            #print("holdPosition: "+str(self.isHoldPosition))
+        elif button == self.bCalib:
+            self.toggleCalib()
+            #print("calib: "+str(self.isCalib))
+        elif button == self.bHome:
+            pygame.event.post(pygame.event.Event(pygame.QUIT))
+        elif button == self.bAccel:
+            self.toggleAccel()
+        elif button == self.bCalibFront:
+            self.calibrationValues[0] += 1
+        elif button == self.bCalibRear:
+            self.calibrationValues[0] -= 1
+        elif button == self.bCalibRight:
+            self.calibrationValues[1] += 1
+        elif button == self.bCalibLeft:
+            self.calibrationValues[1] -= 1
     
-    def isCalibRear(self):
-        pygame.event.pump()
-        return self.pad.get_button(self.bCalibRear)
+    def handleButtonUp(self, button):
+        if button == self.bCalib:
+            self.toggleCalib()
+            #print("calib: "+str(self.isCalib))
     
-    def isCalibRight(self):
-        pygame.event.pump()
-        return self.pad.get_button(self.bCalibRight)
+    def toggleAccel(self):
+        self.isAccel = not self.isAccel
     
-    def isCalibLeft(self):
-        pygame.event.pump()
-        return self.pad.get_button(self.bCalibLeft)
-
-    def isCalib(self):
-        pygame.event.pump()
-        return self.pad.get_button(self.bCalib)    
-
-    def isStart(self):
-        pygame.event.pump()
-        start = self.pad.get_button(self.bStart)
-        if start==1:
-            self.start = not self.start
-        #self.clock.tick(60)
-        return self.start
+    def toggleStart(self):
+        self.isStart = not self.isStart
     
-    def isHoldHeight(self):
-        pygame.event.pump()
-        if self.pad.get_button(self.bHoldHeight):
-            self.holdHeight = not self.holdHeight
-        return self.holdHeight
+    def toggleHoldHeight(self):
+        self.isHoldHeight = not self.isHoldHeight
+        
+    def toggleHoldPosition(self):
+        self.isHoldPosition = not self.isHoldPosition
     
-    def isHoldPosition(self):
-        pygame.event.pump()
-        if self.pad.get_button(self.bHoldPosition):
-            self.holdPosition = not self.holdPosition
-        return self.holdPosition
+    def toggleCalib(self):
+        self.isCalib = not self.isCalib
     
     def getThrottle(self):
-        pygame.event.pump()
-        self.throttle = (self.pad.get_axis(self.bThrottle)+1)/2*100
+        self.throttle = (self.pad.get_axis(self.aThrottle)+1)/2*100
         return self.throttle
     
     def getAxis(self):
-        pygame.event.pump()
-        self.axis = [self.pad.get_axis(self.bXAxis),self.pad.get_axis(self.bYAxis),0]
+        self.axis = [-self.pad.get_axis(self.aYAxis),self.pad.get_axis(self.aXAxis),0]
         return self.axis

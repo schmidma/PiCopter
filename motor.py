@@ -8,6 +8,8 @@ import time
 
 class Motor (object):
 	def __init__(self, pin, minW = 0, maxW = 100):
+		PWM.set_loglevel(PWM.LOG_LEVEL_ERRORS)
+		
 		self.__pin = pin
 		self.__minW = minW
 		self.__maxW = maxW
@@ -52,7 +54,6 @@ class Motor (object):
 	def setW(self, W = None):
 		if W != None:
 			self.__W = W
-		print (self.__W)
 		self.__servo.set_servo(self.__pin, 1000+self.__W*10)
 
 		
