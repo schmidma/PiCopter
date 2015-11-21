@@ -8,9 +8,13 @@ from gamepad import Gamepad
 from accel import Accel
 from motor import Motor
 import time
+import pygame
 
 class Main():
-    def __init__(self):        
+    def __init__(self):
+        pygame.init()
+        self.clock = pygame.time.Clock()
+        
         self.main_throttle = 0
         self.throttle = [0,0,0,0]
 
@@ -40,6 +44,7 @@ class Main():
         
     def idle(self):
         while not self.gamepad.isStart():
+            self.clock.tick(60)
             print("IDLE")
         print ("START")
         self.start()

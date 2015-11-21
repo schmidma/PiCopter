@@ -4,12 +4,12 @@
 # gamepad.py - Gamepad-Klasse
 ##########################################
 
-import pygame
+#import pygame
 
 class Gamepad():
     def __init__(self):
-        pygame.init()
-        self.clock = pygame.time.Clock()
+        #pygame.init()
+        #self.clock = pygame.time.Clock()
         self.pad = pygame.joystick.Joystick(0)
         self.pad.init()
         
@@ -57,7 +57,7 @@ class Gamepad():
         start = self.pad.get_button(self.bStart)
         if start==1:
             self.start = not self.start
-        self.clock.tick(60)
+        #self.clock.tick(60)
         return self.start
     
     def isHoldHeight(self):
