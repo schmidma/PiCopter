@@ -4,7 +4,7 @@
 # gamepad.py - Gamepad-Klasse
 ##########################################
 
-#import pygame
+import pygame
 
 class Gamepad():
     def __init__(self):
