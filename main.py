@@ -166,6 +166,8 @@ class Main():
         for i in range(4):
             if self.throttle[i] > 100:
                 self.throttle[i] = 100
+            elif self.throttle[i] < 0:
+                self.throttle[i] = 0
             self.motors[i].setW(self.throttle[i])
             
     def loop(self):
