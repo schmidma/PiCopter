@@ -19,6 +19,7 @@ class Main():
         
         pygame.init()
         self.clock = pygame.time.Clock()
+        self.max_fps = 120
         
         self.backgroundColor = (250,250,250)
     
@@ -82,27 +83,26 @@ class Main():
         
     def start_motors(self):
         #print("Throttle to min 50")
-        self.gui.win_message.addstr(0, 0, "                              ", curses.A_BLINK)
-        self.gui.win_message.addstr(0, 8, "Calibrate Throttle!", curses.A_BLINK)
-        self.gui.win_message.refresh()
+        self.gui.hideMessage()
+        self.gui.showMessage("Calibrate Throttle!")
+        
         while self.gamepad.getThrottle()<=50:
             pygame.event.pump()
-        #print("Throttle to 0 to start!")
+        
         while self.gamepad.getThrottle()!=0:
             pygame.event.pump()
+        
         for m in self.motors:
             m.start()
-        self.started = True
-        self.gui.win_message.clear()
-        self.gui.win_message.refresh()
         
-        #print("STARTED!!!")
+        self.started = True
+        
+        self.gui.hideMessage()
     
     def stop_motors(self):
         for m in self.motors:
             m.stop()
         self.started = False
-        #print("STOPPED!!!")
         
     def accelCalculation(self):
         self.accel_diff = [(self.accel.getResult(1)[i]+self.accel.getCalibrationValues()[i])/260*100 for i in range (3)]
@@ -249,21 +249,19 @@ class Main():
         
     def loop(self):
         while self.run:
-            self.clock.tick(120)
+            self.clock.tick(self.max_fps)
             
             if self.DEBUG:
                 self.gui.guiTick(self.clock.get_fps(), self.throttle, self.gamepad.isStart, self.gamepad.isHoldHeight, self.gamepad.isHoldPosition, self.gamepad.isAccel)
             pygame.event.pump()
             self.eventHandler()
+            
             if self.gamepad.isStart:
-                #print("started")
                 if not self.started:
                     self.start_motors()
                 self.changeMotorSpeed()
             else:
-                #print("notStarted")
-                self.gui.win_message.addstr(0, 0, "Press 'start'-Button to start!", curses.A_BLINK)
-                self.gui.win_message.refresh()
+                self.gui.showMessage("Press 'start'-Button to start!")
                 if self.started:
                     self.stop_motors()
 
