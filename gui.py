@@ -49,6 +49,15 @@ class Gui():
             for i in w:
                 i.box()
                 i.bkgd(curses.color_pair(1))
+                
+    def showMessage(self, message):
+        self.gui.win_message.addstr(0, 0, str(message), curses.A_BLINK)
+        self.gui.win_message.refresh()
+        
+    def hideMessage(self):
+        self.gui.win_message.clear()
+        self.gui.win_message.refresh()
+    
     def guiTick(self, fps, throttle, isStart, isHoldHeight, isHoldPosition, isAccel):
         self.win_fps.addstr(1, 1, str(int(fps)))
         
