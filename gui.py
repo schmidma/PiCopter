@@ -22,10 +22,10 @@ class Gui():
         self.win_fps.box()
         
         
-        self.win_m1 = curses.newwin(3, 6, 4, 2)
-        self.win_m2 = curses.newwin(3, 6, 4, 10)
-        self.win_m3 = curses.newwin(3, 6, 8, 10)
-        self.win_m4 = curses.newwin(3, 6, 8, 2)
+        self.win_m1 = curses.newwin(3, 8, 4, 2)
+        self.win_m2 = curses.newwin(3, 8, 4, 10)
+        self.win_m3 = curses.newwin(3, 8, 8, 10)
+        self.win_m4 = curses.newwin(3, 8, 8, 2)
         
         self.win_motors = [self.win_m1, self.win_m2, self.win_m3, self.win_m4]
         
@@ -62,9 +62,9 @@ class Gui():
         self.win_fps.addstr(1, 1, str(int(fps)))
         
         for m in range(4):
-            self.win_motors[m].addstr(1,1, "    ")
-            string = str(throttle[m])+"%"
-            self.win_motors[m].addstr(1,5-len(string), string)
+            self.win_motors[m].addstr(1,1, "      ")
+            string = str(int(throttle[m]*10)/10.0)+"%"
+            self.win_motors[m].addstr(1,7-len(string), string)
         
         if isStart:
             self.win_isStart.bkgd(curses.color_pair(2))
