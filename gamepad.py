@@ -8,8 +8,6 @@ import pygame
 
 class Gamepad():
     def __init__(self):
-        #pygame.init()
-        #self.clock = pygame.time.Clock()
         self.pad = pygame.joystick.Joystick(0)
         self.pad.init()
         
