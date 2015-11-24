@@ -54,6 +54,4 @@ class Motor (object):
 	def setW(self, W = None):
 		if W != None:
 			self.__W = W
-		self.__servo.set_servo(self.__pin, 1000+self.__W*10)
-
-		
+		self.__servo.set_servo(self.__pin, int(1000+self.__W*10))
