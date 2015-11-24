@@ -3,10 +3,9 @@
 ##########################################
 
 #IMPORT
-from time import sleep
+
 #importiere smbus für Zugriff auf den i2c-Port
 import smbus
-import string
 
 class Gyro (object):
 	def __init__(self, i2c_bus = 1, i2c_address = 0x69):
