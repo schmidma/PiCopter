@@ -39,17 +39,17 @@ class Gamepad():
         elif button == self.mapping["square"]:
             self.toggleAccel()
         elif button == self.mapping["up"]:
-            self.calibrationValues[0] += 1
+            self.calibrationValues[0] += 0.2
         elif button == self.mapping["down"]:
-            self.calibrationValues[0] -= 1
+            self.calibrationValues[0] -= 0.2
         elif button == self.mapping["right"]:
-            self.calibrationValues[1] += 1
+            self.calibrationValues[1] += 0.2
         elif button == self.mapping["left"]:
-            self.calibrationValues[1] -= 1
+            self.calibrationValues[1] -= 0.2
         elif button == self.mapping["l1"]:
-            self.calibrationValues[2] += 1
+            self.calibrationValues[2] += 0.5
         elif button == self.mapping["r1"]:
-            self.calibrationValues[2] -= 1
+            self.calibrationValues[2] -= 0.5
     
     def handleButtonUp(self, button):
         if button == self.mapping["select"]:
