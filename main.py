@@ -83,8 +83,9 @@ class Main():
         
     def start_motors(self):
         #print("Throttle to min 50")
-        self.gui.hideMessage()
-        self.gui.showMessage("Calibrate Throttle!")
+        if self.DEBUG:
+            self.gui.hideMessage()
+            self.gui.showMessage("Calibrate Throttle!")
         
         while self.gamepad.getThrottle()<=50:
             pygame.event.pump()
@@ -97,7 +98,8 @@ class Main():
         
         self.started = True
         
-        self.gui.hideMessage()
+        if self.DEBUG:
+            self.gui.hideMessage()
     
     def stop_motors(self):
         for m in self.motors:
@@ -151,15 +153,20 @@ class Main():
             self.throttle[3] -= self.accel_diff[1]
 
         #Pad-Motor-Steuerung
-        self.throttle[0] -= self.gamepad_axis[0]*10+self.gamepad.calibrationValues[0]
-        self.throttle[1] -= self.gamepad_axis[0]*10+self.gamepad.calibrationValues[0]
-        self.throttle[2] += self.gamepad_axis[0]*10+self.gamepad.calibrationValues[0]
-        self.throttle[3] += self.gamepad_axis[0]*10+self.gamepad.calibrationValues[0]
+        self.throttle[0] -= self.gamepad_axis[0]*5+self.gamepad.calibrationValues[0]
+        self.throttle[1] -= self.gamepad_axis[0]*5+self.gamepad.calibrationValues[0]
+        self.throttle[2] += self.gamepad_axis[0]*5+self.gamepad.calibrationValues[0]
+        self.throttle[3] += self.gamepad_axis[0]*5+self.gamepad.calibrationValues[0]
 
-        self.throttle[0] += self.gamepad_axis[1]*10+self.gamepad.calibrationValues[1]
-        self.throttle[1] -= self.gamepad_axis[1]*10+self.gamepad.calibrationValues[1]
-        self.throttle[2] -= self.gamepad_axis[1]*10+self.gamepad.calibrationValues[1]
-        self.throttle[3] += self.gamepad_axis[1]*10+self.gamepad.calibrationValues[1]
+        self.throttle[0] += self.gamepad_axis[1]*5+self.gamepad.calibrationValues[1]
+        self.throttle[1] -= self.gamepad_axis[1]*5+self.gamepad.calibrationValues[1]
+        self.throttle[2] -= self.gamepad_axis[1]*5+self.gamepad.calibrationValues[1]
+        self.throttle[3] += self.gamepad_axis[1]*5+self.gamepad.calibrationValues[1]
+        
+        self.throttle[0] += self.gamepad.calibrationValues[2]
+        self.throttle[1] -= self.gamepad.calibrationValues[2]
+        self.throttle[2] += self.gamepad.calibrationValues[2]
+        self.throttle[3] -= self.gamepad.calibrationValues[2]
         
         self.throttle = [int(self.gamepad_throttle+self.throttle[i]) for i in range(4)]
         
@@ -184,7 +191,8 @@ class Main():
                     self.start_motors()
                 self.changeMotorSpeed()
             else:
-                self.gui.showMessage("Press 'start'-Button to start!")
+                if self.DEBUG:
+                    self.gui.showMessage("Press 'start'-Button to start!")
                 if self.started:
                     self.stop_motors()
 

@@ -27,6 +27,8 @@ class Gamepad():
         self.bCalibRear = 6
         self.bCalibRight =5
         self.bCalibLeft = 7
+        self.bCalibRotLeft = 10
+        self.bCalibRotRight = 11
         self.bCalib = 0
         self.aXAxis = 0
         self.aYAxis = 1
@@ -62,6 +64,10 @@ class Gamepad():
             self.calibrationValues[1] += 1
         elif button == self.bCalibLeft:
             self.calibrationValues[1] -= 1
+        elif button == self.bCalibRotLeft:
+            self.calibrationValues[2] += 1
+        elif button == self.bCalibRotRight:
+            self.calibrationValues[2] -= 1
     
     def handleButtonUp(self, button):
         if button == self.bCalib:
