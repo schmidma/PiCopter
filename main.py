@@ -11,15 +11,15 @@ from motor import Motor
 from gui import Gui
 
 from pygame.locals import *
-import sys, os, time, pygame, curses
+import sys, os, time, pygame, curses, getopt
 
 class Main():
-    def __init__(self, DEBUG = False):
+    def __init__(self, DEBUG, fps):
         self.DEBUG = DEBUG
         
         pygame.init()
         self.clock = pygame.time.Clock()
-        self.max_fps = 120
+        self.max_fps = fps
         
         self.backgroundColor = (250,250,250)
     
@@ -196,9 +196,17 @@ class Main():
                 if self.started:
                     self.stop_motors()
 
-
-if len(sys.argv) > 1:
-    if sys.argv[1] == "--debug":
-        go = Main(True)
-else:
-    go = Main()
+if __name__ == "__main__":
+    fps = 120
+    debug = False
+    
+    parameter = getopt.getopt(sys.argv[1:], "", ["debug", "fps="])
+    
+    for opt, arg in parameter:
+        if opt == "--debug":
+            debug = True
+        elif opt == "--fps":
+            fps = arg
+    
+    MAIN = Main(debug, fps)
+    
