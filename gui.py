@@ -35,13 +35,13 @@ class Gui():
         self.win_isHoldHeight.addstr(1,2, "HoldHeight")
         self.win_isHoldPosition = curses.newwin(3,14, 11, 50)
         self.win_isHoldPosition.addstr(1,1, "HoldPosition")
-        self.win_isAccel = curses.newwin(3,14, 15, 50)
-        self.win_isAccel.addstr(1,4, "Accel")
+        self.win_isGyro = curses.newwin(3,14, 15, 50)
+        self.win_isGyro.addstr(1,4, "Gyro")
         
         self.win_message = curses.newwin(1, 32, 1, 24)
         self.win_message.bkgd(curses.color_pair(1))
         
-        self.win_bools = [self.win_isStart, self.win_isHoldHeight, self.win_isHoldPosition, self.win_isAccel]
+        self.win_bools = [self.win_isStart, self.win_isHoldHeight, self.win_isHoldPosition, self.win_isGyro]
         
         self.windows = [[self.win_fps], self.win_motors, self.win_bools]
         
@@ -58,7 +58,7 @@ class Gui():
         self.win_message.clear()
         self.win_message.refresh()
     
-    def guiTick(self, fps, throttle, isStart, isHoldHeight, isHoldPosition, isAccel):
+    def guiTick(self, fps, throttle, isStart, isHoldHeight, isHoldPosition, isGyro):
         self.win_fps.addstr(1, 1, str(int(fps)))
         
         for m in range(4):
@@ -81,10 +81,10 @@ class Gui():
         else:
             self.win_isHoldPosition.bkgd(curses.color_pair(3))
             
-        if isAccel:
-            self.win_isAccel.bkgd(curses.color_pair(2))
+        if isGyro:
+            self.win_isGyro.bkgd(curses.color_pair(2))
         else:
-            self.win_isAccel.bkgd(curses.color_pair(3))
+            self.win_isGyro.bkgd(curses.color_pair(3))
         
         for w in self.windows:
             for i in w:

@@ -17,7 +17,7 @@ class Gamepad():
         self.isCalib = 0
         self.isHoldHeight = 0
         self.isHoldPosition = 0
-        self.isAccel = 0
+        self.isGyro = 0
         self.throttle = 0
         self.axis = [0,0,0]
         
@@ -35,7 +35,7 @@ class Gamepad():
         elif button == self.mapping["PS"]:
             pygame.event.post(pygame.event.Event(pygame.QUIT))
         elif button == self.mapping["square"]:
-            self.toggleAccel()
+            self.toggleGyro()
         elif button == self.mapping["up"]:
             self.calibrationValues[0] += 0.2
         elif button == self.mapping["down"]:
@@ -53,8 +53,8 @@ class Gamepad():
         if button == self.mapping["select"]:
             self.toggleCalib()
     
-    def toggleAccel(self):
-        self.isAccel = not self.isAccel
+    def toggleGyro(self):
+        self.isGyro = not self.isGyro
     
     def toggleStart(self):
         self.isStart = not self.isStart
@@ -73,5 +73,5 @@ class Gamepad():
         return self.throttle
     
     def getAxis(self):
-        self.axis = [-self.pad.get_axis(self.mapping["l-stick-y"]),self.pad.get_axis(self.mapping["l-stick-x"),0]
+        self.axis = [-self.pad.get_axis(self.mapping["l-stick-y"]),self.pad.get_axis(self.mapping["l-stick-x"]),0]
         return self.axis
