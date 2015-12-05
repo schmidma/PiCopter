@@ -30,7 +30,7 @@ class Accel ():
         
         self.calibrationValues = [0,0,0]
         
-        self.accel_diff
+        self.accel_diff = [0,0,0]
 
     #Definiere read-Methode zum Auslesen der Achsen-Werte
     def read(self):
@@ -74,6 +74,6 @@ class Accel ():
                 self.accel_diff[i] = -10
     
     def getAccelValues(self):
-        accel_result = self.accel.getResult(1)
+        accel_result = self.getResult(1)
         accel_axes = [accel_result[i]+self.calibrationValues[i] for i in range(3)]
         return accel_axes
