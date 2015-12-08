@@ -9,6 +9,7 @@ from gamepad import Gamepad
 from motor import Motor
 from gui import Gui
 from gyro import Gyro
+from accel import Accel
 
 from pygame.locals import *
 import sys, os, time, pygame, curses, getopt
@@ -34,12 +35,12 @@ class Main():
         self.isGamepad = 1
         
         self.gamepad = Gamepad()
-        self.gamepad_axis = [0,0,0]
+        self.gamepad_axes = [0,0,0]
         self.gamepad_throttle = 0
         
         self.gyro = Gyro()
-        self.gyro_axes = [0,0,0]
-        self.gyro_throttle = [0,0,0]
+        
+        self.accel = Accel()
         
         self.m1 = Motor(15)
         self.m2 = Motor(27)
@@ -70,7 +71,7 @@ class Main():
         
     def getGamepadValues(self):
         self.gamepad_throttle = self.gamepad.getThrottle()
-        self.gamepad_axis = self.gamepad.getAxis()
+        self.gamepad_axes = self.gamepad.getAxis()
         
         if self.gamepad.isCalib:
             self.gyro.calibrateGyro()
@@ -107,7 +108,9 @@ class Main():
     def changeMotorSpeed(self):
         self.throttle = [0,0,0,0]
         self.getGamepadValues()
-        #self.gyro_axes = self.gyro.getGyroValues()
+        
+        self.gyro.gyroCalculation(self.clock.get_time())
+        self.accel.accelCalculation()
         
         if (self.gamepad.isHoldHeight):
             pass
@@ -116,24 +119,13 @@ class Main():
             pass
         
         if (self.gamepad.isGyro):
-            self.gyro.gyroCalculation(self.clock.get_time())
-            
-            #Accel-Motor-Steuereung
-            self.throttle[0] += self.gyro.gyro_diff[0]
-            self.throttle[1] += self.gyro.gyro_diff[0]
-            self.throttle[2] -= self.gyro.gyro_diff[0]
-            self.throttle[3] -= self.gyro.gyro_diff[0]
-    
-            self.throttle[0] -= self.gyro.gyro_diff[1]
-            self.throttle[1] += self.gyro.gyro_diff[1]
-            self.throttle[2] += self.gyro.gyro_diff[1]
-            self.throttle[3] -= self.gyro.gyro_diff[1]
+            pass
 
         #Pad-Motor-Steuerung
-        self.throttle[0] += -self.gamepad_axis[0]*self.stick_sens+self.gamepad.calibrationValues[0] + self.gamepad_axis[1]*self.stick_sens+self.gamepad.calibrationValues[1] - self.gamepad.calibrationValues[2]
-        self.throttle[1] += -self.gamepad_axis[0]*self.stick_sens+self.gamepad.calibrationValues[0] - self.gamepad_axis[1]*self.stick_sens+self.gamepad.calibrationValues[1] + self.gamepad.calibrationValues[2]
-        self.throttle[2] += +self.gamepad_axis[0]*self.stick_sens+self.gamepad.calibrationValues[0] - self.gamepad_axis[1]*self.stick_sens+self.gamepad.calibrationValues[1] - self.gamepad.calibrationValues[2]
-        self.throttle[3] += +self.gamepad_axis[0]*self.stick_sens+self.gamepad.calibrationValues[0] + self.gamepad_axis[1]*self.stick_sens+self.gamepad.calibrationValues[1] + self.gamepad.calibrationValues[2]
+        self.throttle[0] += -self.gamepad_axes[0]*self.stick_sens+self.gamepad.calibrationValues[0] + self.gamepad_axes[1]*self.stick_sens+self.gamepad.calibrationValues[1] - self.gamepad.calibrationValues[2]
+        self.throttle[1] += -self.gamepad_axes[0]*self.stick_sens+self.gamepad.calibrationValues[0] - self.gamepad_axes[1]*self.stick_sens+self.gamepad.calibrationValues[1] + self.gamepad.calibrationValues[2]
+        self.throttle[2] += +self.gamepad_axes[0]*self.stick_sens+self.gamepad.calibrationValues[0] - self.gamepad_axes[1]*self.stick_sens+self.gamepad.calibrationValues[1] - self.gamepad.calibrationValues[2]
+        self.throttle[3] += +self.gamepad_axes[0]*self.stick_sens+self.gamepad.calibrationValues[0] + self.gamepad_axes[1]*self.stick_sens+self.gamepad.calibrationValues[1] + self.gamepad.calibrationValues[2]
         
         self.throttle = [int(self.gamepad_throttle+self.throttle[i]) for i in range(4)]
         
@@ -152,7 +144,7 @@ class Main():
             self.eventHandler()
             
             if self.DEBUG:
-                self.gui.guiTick(self.clock.get_fps(), self.throttle, self.gamepad.isStart, self.gamepad.isHoldHeight, self.gamepad.isHoldPosition, self.gamepad.isGyro)
+                self.gui.guiTick(self.clock.get_fps(), self.throttle, self.gamepad.isStart, self.gamepad.isHoldHeight, self.gamepad.isHoldPosition, self.gamepad.isGyro, [self.accel.pitch, self.accel.roll], [self.gyro.pitch, self.gyro.roll])
             
             if self.gamepad.isStart:
                 if not self.started:
