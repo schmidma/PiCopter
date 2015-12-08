@@ -19,15 +19,12 @@ class Motor (object):
 	def calibrate_esc(self):
 		print ("Disconnect ESC-Power")
 		res = raw_input()
-		#self.__servo.set_servo(self.__pin, 2000)
 		self.setW(100)
 		print ("Connect ESC-Power. Wait for BEEP")
 		res = raw_input()
-		#self.__servo.set_servo(self.__pin, 1000)
 		self.setW(0)
 
 	def start(self):
-		#self.__servo.set_servo(self.__pin, 1000)
 		self.setW(0)
 	
 	def stop(self):
