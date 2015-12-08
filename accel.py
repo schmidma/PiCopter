@@ -7,6 +7,7 @@
 #IMPORT
 #importiere smbus für Zugriff auf die i2c-Ports
 import smbus
+import math
 
 #Definiere die Klasse "Accel" zum abfragen der Rotationswerte um die X-,Y-,Z-Achsen
 class Accel ():
@@ -15,6 +16,8 @@ class Accel ():
     #Parameter:
     # - i2c_bus - Busadresse; Standard: 1
     # - i2c_address - Adresse des i2c_chips in HEX
+    
+    __CalibrationIteration = 10
     
     #Konstruktor-Methode
     def __init__(self, i2c_bus = 1, i2c_address = 0x53):
@@ -28,7 +31,9 @@ class Accel ():
         #Setze das POWER_CTL auf 0x08 (00001000) - Measurement mode
         self.__i2c_bus.write_byte_data(self.i2c_address, 0x2D, 0x08)
         
-        self.calibrationValues = [0,0,0]
+        self.offset = [0,0,0]
+        self.pitch = 0
+        self.roll= 0
         
         self.accel_diff = [0,0,0]
 
@@ -39,9 +44,8 @@ class Accel ():
     
     #Definiere getResult-Methode zum Auswerten der Roh-Werte
     #Parameter: refresh - wenn True: Liest die Achsenwerte neu
-    def getResult(self, refresh=0):
-        if refresh:
-            self.read()
+    def getResult(self):
+        self.read()
         
         #Deklariere das Ergebnis-Liste
         res = []
@@ -60,20 +64,15 @@ class Accel ():
         return res
     
     def calibrateAccel(self):
-        result = self.getResult(1)
-        self.calibrationValues = [-result[0], -result[1], -result[2]]
+        for i in range(__CalibrationIteration):
+            result = self.getResult()
+            self.offset = [self.offset[a] + result[a] for a in range(3)]
+            
+        self.offset = [result[0]/__CalibrationIteration, result[1]/__CalibrationIteration, result[2]/__CalibrationIteration]
 
     def accelCalculation(self):
-        result = self.getResult(1)
-        self.accel_diff = [(result[i]+self.calibrationValues[i])/260*100 for i in range (3)]
-        #Beschränkung auf maximal 10% Einfluss
-        for i in range(3):
-            if self.accel_diff[i] > 10:
-                self.accel_diff[i] = 10
-            elif self.accel_diff[i] < -10:
-                self.accel_diff[i] = -10
-    
-    def getAccelValues(self):
-        accel_result = self.getResult(1)
-        accel_axes = [accel_result[i]+self.calibrationValues[i] for i in range(3)]
-        return accel_axes
+        result = self.getResult()
+        result = [result[i]-self.offset[i] for i in range (3)]
+        
+        self.pitch = math.atan2(result[1],result[2])
+        self.roll = math.atan2(result[0], result[2])
