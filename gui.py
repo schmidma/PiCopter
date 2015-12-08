@@ -58,7 +58,7 @@ class Gui():
         self.win_message.clear()
         self.win_message.refresh()
     
-    def guiTick(self, fps, throttle, isStart, isHoldHeight, isHoldPosition, isGyro):
+    def guiTick(self, fps, throttle, isStart, isHoldHeight, isHoldPosition, isGyro, accelAxes, gyroAxes):
         self.win_fps.addstr(1, 1, str(int(fps)))
         
         for m in range(4):
