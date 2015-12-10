@@ -38,12 +38,22 @@ class Gui():
         self.win_isGyro = curses.newwin(3,14, 15, 50)
         self.win_isGyro.addstr(1,4, "Gyro")
         
+        self.win_accel_pitch = curses.newwin(3, 8, 12, 2)
+        self.win_accel_roll = curses.newwin(3, 8, 12, 11)
+        
+        self.win_gyro_pitch = curses.newwin(3, 8, 16, 2)
+        self.win_gyro_roll = curses.newwin(3, 8, 16, 11)
+        
+        
+        self.win_accel = [self.win_accel_pitch, self.win_accel_roll]
+        self.win_gyro = [self.win_gyro_pitch, self.win_gyro_roll]
+        
         self.win_message = curses.newwin(1, 32, 1, 24)
         self.win_message.bkgd(curses.color_pair(1))
         
         self.win_bools = [self.win_isStart, self.win_isHoldHeight, self.win_isHoldPosition, self.win_isGyro]
         
-        self.windows = [[self.win_fps], self.win_motors, self.win_bools]
+        self.windows = [[self.win_fps], self.win_motors, self.win_bools, self.win_accel, self.win_gyro]
         
         for w in self.windows:
             for i in w:
@@ -65,6 +75,17 @@ class Gui():
             self.win_motors[m].addstr(1,1, "      ")
             string = str(int(throttle[m]*10)/10.0)+"%"
             self.win_motors[m].addstr(1,7-len(string), string)
+            
+            
+        self.win_accel_pitch.addstr(1,1, "      ")
+        self.win_accel_roll.addstr(1,1, "      ")
+        self.win_accel_pitch.addstr(1,1,str(int(accelAxes[0])))
+        self.win_accel_roll.addstr(1,1,str(int(accelAxes[1])))
+        
+        self.win_gyro_pitch.addstr(1,1, "      ")
+        self.win_gyro_roll.addstr(1,1, "      ")
+        self.win_gyro_pitch.addstr(1,1,str(int(gyroAxes[0])))
+        self.win_gyro_roll.addstr(1,1,str(int(gyroAxes[1])))
         
         if isStart:
             self.win_isStart.bkgd(curses.color_pair(2))
