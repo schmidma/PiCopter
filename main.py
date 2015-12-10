@@ -89,7 +89,7 @@ class Main():
         
         for m in self.motors:
             m.start()
-        
+            
         self.gyro.calibrateGyro()
         
         self.started = True
@@ -119,7 +119,22 @@ class Main():
             pass
         
         if (self.gamepad.isGyro):
-            pass
+            pitch = self.accel.pitch
+            roll = self.accel.roll
+            if pitch > 20:
+                pitch = 20
+            elif pitch < -20:
+                pitch = -20
+            if roll > 20:
+                roll = 20
+            elif roll < -20:
+                roll = -20
+                
+            #print(str(pitch)+"        "+str(roll))
+            self.throttle[0] += pitch-roll
+            self.throttle[1] += pitch+roll
+            self.throttle[2] += -pitch+roll
+            self.throttle[3] += -pitch-roll
 
         #Pad-Motor-Steuerung
         self.throttle[0] += -self.gamepad_axes[0]*self.stick_sens+self.gamepad.calibrationValues[0] + self.gamepad_axes[1]*self.stick_sens+self.gamepad.calibrationValues[1] - self.gamepad.calibrationValues[2]
