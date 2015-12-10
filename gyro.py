@@ -9,9 +9,9 @@ import smbus
 
 class Gyro():
     
-    __CalibrationIteration = 10
-    
     def __init__(self, i2c_bus = 1, i2c_address = 0x69):
+        
+        self.__CalibrationIteration = 30
         self.__i2c_bus = smbus.SMBus(i2c_bus)
         
         self.i2c_address = i2c_address
@@ -53,20 +53,20 @@ class Gyro():
             g = self.bytes[i] | (self.bytes[i+1] << 8)
             if g > 32767:
                 g -= 65536
-            res.append(g)
+            res.append(g*0.7)
         
         return res
     
     def gyroCalculation(self, delta_time):
         result = self.getResult()
-        
         self.gyro_axes = [self.gyro_axes[i]+((result[i]-self.offset[i])/10*(delta_time/1000.0)) for i in range (3)]
         self.pitch = self.gyro_axes[0]
-        self.roll = self.gyro_axes[1]
+        self.roll = -1*self.gyro_axes[1]
     
     def calibrateGyro(self):
-        for i in range(__CalibrationIteration):
+        self.offset = [0,0,0]
+        self.gyro_axes = [0,0,0]
+        for i in range(self.__CalibrationIteration):
             result = self.getResult()
             self.offset = [self.offset[a] + result[a] for a in range(3)]
-            
-        self.offset = [result[0]/__CalibrationIteration, result[1]/__CalibrationIteration, result[2]/__CalibrationIteration]
+        self.offset = [self.offset[0]/self.__CalibrationIteration, self.offset[1]/self.__CalibrationIteration, self.offset[2]/self.__CalibrationIteration]
