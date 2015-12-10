@@ -17,10 +17,10 @@ class Accel ():
     # - i2c_bus - Busadresse; Standard: 1
     # - i2c_address - Adresse des i2c_chips in HEX
     
-    __CalibrationIteration = 10
-    
     #Konstruktor-Methode
     def __init__(self, i2c_bus = 1, i2c_address = 0x53):
+        
+        self.__CalibrationIteration = 20
         
         #Initiiere den i2c-Bus
         self.__i2c_bus = smbus.SMBus(i2c_bus)
@@ -31,7 +31,7 @@ class Accel ():
         #Setze das POWER_CTL auf 0x08 (00001000) - Measurement mode
         self.__i2c_bus.write_byte_data(self.i2c_address, 0x2D, 0x08)
         
-        self.offset = [0,0,0]
+        self.offset = [5.5,-3,0]
         self.pitch = 0
         self.roll= 0
         
@@ -64,15 +64,15 @@ class Accel ():
         return res
     
     def calibrateAccel(self):
-        for i in range(__CalibrationIteration):
+        for i in range(self.__CalibrationIteration):
             result = self.getResult()
             self.offset = [self.offset[a] + result[a] for a in range(3)]
             
-        self.offset = [result[0]/__CalibrationIteration, result[1]/__CalibrationIteration, result[2]/__CalibrationIteration]
+        self.offset = [self.offset[0]/self.__CalibrationIteration, self.offset[1]/self.__CalibrationIteration, self.offset[2]/self.__CalibrationIteration]
 
     def accelCalculation(self):
         result = self.getResult()
         result = [result[i]-self.offset[i] for i in range (3)]
         
-        self.pitch = math.atan2(result[1],result[2])
-        self.roll = math.atan2(result[0], result[2])
+        self.pitch = math.degrees(math.atan2(result[0],-1*result[2]))
+        self.roll = math.degrees(math.atan2(result[1], -1*result[2]))
