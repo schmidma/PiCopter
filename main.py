@@ -8,9 +8,6 @@
 from gamepad import Gamepad
 from motor import Motor
 from gui import Gui
-from gyro import Gyro
-from accel import Accel
-from bno import BNO
 
 from pygame.locals import *
 import sys, os, time, pygame, curses, getopt
