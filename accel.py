@@ -69,6 +69,7 @@ class Accel ():
             self.offset = [self.offset[a] + result[a] for a in range(3)]
             
         self.offset = [self.offset[0]/self.__CalibrationIteration, self.offset[1]/self.__CalibrationIteration, self.offset[2]/self.__CalibrationIteration]
+        print(self.offset)
 
     def accelCalculation(self):
         result = self.getResult()

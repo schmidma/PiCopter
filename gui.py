@@ -31,29 +31,21 @@ class Gui():
         
         self.win_isStart = curses.newwin(3,14, 3, 50)
         self.win_isStart.addstr(1,4, "Start")
-        self.win_isHoldHeight = curses.newwin(3,14, 7, 50)
-        self.win_isHoldHeight.addstr(1,2, "HoldHeight")
-        self.win_isHoldPosition = curses.newwin(3,14, 11, 50)
-        self.win_isHoldPosition.addstr(1,1, "HoldPosition")
-        self.win_isGyro = curses.newwin(3,14, 15, 50)
-        self.win_isGyro.addstr(1,4, "Gyro")
+        self.win_isBNO = curses.newwin(3,14, 15, 50)
+        self.win_isBNO.addstr(1,4, "BNO")
         
-        self.win_accel_pitch = curses.newwin(3, 8, 12, 2)
-        self.win_accel_roll = curses.newwin(3, 8, 12, 11)
+        self.win_bno_heading = curses.newwin(3, 8, 12, 2)
+        self.win_bno_pitch = curses.newwin(3, 8, 12, 11)
+        self.win_bno_roll = curses.newwin(3, 8, 12, 20)
         
-        self.win_gyro_pitch = curses.newwin(3, 8, 16, 2)
-        self.win_gyro_roll = curses.newwin(3, 8, 16, 11)
-        
-        
-        self.win_accel = [self.win_accel_pitch, self.win_accel_roll]
-        self.win_gyro = [self.win_gyro_pitch, self.win_gyro_roll]
+        self.win_bno = [self.win_bno_heading, self.win_bno_pitch, self.win_bno_roll]
         
         self.win_message = curses.newwin(1, 32, 1, 24)
         self.win_message.bkgd(curses.color_pair(1))
         
-        self.win_bools = [self.win_isStart, self.win_isHoldHeight, self.win_isHoldPosition, self.win_isGyro]
+        self.win_bools = [self.win_isStart, self.win_isBNO]
         
-        self.windows = [[self.win_fps], self.win_motors, self.win_bools, self.win_accel, self.win_gyro]
+        self.windows = [[self.win_fps], self.win_motors, self.win_bools, self.win_bno]
         
         for w in self.windows:
             for i in w:
@@ -68,7 +60,7 @@ class Gui():
         self.win_message.clear()
         self.win_message.refresh()
     
-    def guiTick(self, fps, throttle, isStart, isHoldHeight, isHoldPosition, isGyro, accelAxes, gyroAxes):
+    def guiTick(self, fps, throttle, isStart, isBNO, bnoAxes):
         self.win_fps.addstr(1, 1, str(int(fps)))
         
         for m in range(4):
@@ -77,35 +69,23 @@ class Gui():
             self.win_motors[m].addstr(1,7-len(string), string)
             
             
-        self.win_accel_pitch.addstr(1,1, "      ")
-        self.win_accel_roll.addstr(1,1, "      ")
-        self.win_accel_pitch.addstr(1,1,str(int(accelAxes[0])))
-        self.win_accel_roll.addstr(1,1,str(int(accelAxes[1])))
+        self.win_bno_heading.addstr(1,1, "      ")
+        self.win_bno_pitch.addstr(1,1, "      ")
+        self.win_bno_roll.addstr(1,1, "      ")
+        self.win_bno_heading.addstr(1,1,str(int(bnoAxes[0])))
+        self.win_bno_roll.addstr(1,1,str(int(bnoAxes[1])))
+        self.win_bno_pitch.addstr(1,1,str(int(bnoAxes[2])))
         
-        self.win_gyro_pitch.addstr(1,1, "      ")
-        self.win_gyro_roll.addstr(1,1, "      ")
-        self.win_gyro_pitch.addstr(1,1,str(int(gyroAxes[0])))
-        self.win_gyro_roll.addstr(1,1,str(int(gyroAxes[1])))
         
         if isStart:
             self.win_isStart.bkgd(curses.color_pair(2))
         else:
             self.win_isStart.bkgd(curses.color_pair(3))
             
-        if isHoldHeight:
-            self.win_isHoldHeight.bkgd(curses.color_pair(2))
+        if isBNO:
+            self.win_isBNO.bkgd(curses.color_pair(2))
         else:
-            self.win_isHoldHeight.bkgd(curses.color_pair(3))
-            
-        if isHoldPosition:
-            self.win_isHoldPosition.bkgd(curses.color_pair(2))
-        else:
-            self.win_isHoldPosition.bkgd(curses.color_pair(3))
-            
-        if isGyro:
-            self.win_isGyro.bkgd(curses.color_pair(2))
-        else:
-            self.win_isGyro.bkgd(curses.color_pair(3))
+            self.win_isBNO.bkgd(curses.color_pair(3))
         
         for w in self.windows:
             for i in w:

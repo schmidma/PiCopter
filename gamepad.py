@@ -11,13 +11,12 @@ class Gamepad():
         self.pad = pygame.joystick.Joystick(0)
         self.pad.init()
         
-        self.calibrationValues = [0,0,0]
+        self.offset = [0,0,0]
         
         self.isStart = 0
         self.isCalib = 0
-        self.isHoldHeight = 0
-        self.isHoldPosition = 0
-        self.isGyro = 0
+        self.isBNO = 0
+        self.isSave = 0
         self.throttle = 0
         self.axis = [0,0,0]
         
@@ -27,43 +26,42 @@ class Gamepad():
         if button == self.mapping["start"]:
             self.toggleStart()
         elif button == self.mapping["triangle"]:
-            self.toggleHoldHeight()
+            self.toggleSave()
         elif button == self.mapping["circle"]:
-            self.toggleHoldPosition()
+            pass
         elif button == self.mapping["select"]:
             self.toggleCalib()
         elif button == self.mapping["PS"]:
             pygame.event.post(pygame.event.Event(pygame.QUIT))
         elif button == self.mapping["square"]:
-            self.toggleGyro()
+            self.toggleBNO()
         elif button == self.mapping["up"]:
-            self.calibrationValues[0] += 0.2
+            self.offset[0] += 0.2
         elif button == self.mapping["down"]:
-            self.calibrationValues[0] -= 0.2
+            self.offset[0] -= 0.2
         elif button == self.mapping["right"]:
-            self.calibrationValues[1] += 0.2
+            self.offset[1] += 0.2
         elif button == self.mapping["left"]:
-            self.calibrationValues[1] -= 0.2
+            self.offset[1] -= 0.2
         elif button == self.mapping["l1"]:
-            self.calibrationValues[2] += 0.5
+            self.offset[2] += 0.5
         elif button == self.mapping["r1"]:
-            self.calibrationValues[2] -= 0.5
+            self.offset[2] -= 0.5
     
     def handleButtonUp(self, button):
         if button == self.mapping["select"]:
-            self.toggleCalib()
+            self.isCalib = False
+        if button == self.mapping["triangle"]:
+            self.isSave = False
     
-    def toggleGyro(self):
-        self.isGyro = not self.isGyro
+    def toggleBNO(self):
+        self.isBNO = not self.isBNO
+    
+    def toggleSave(self):
+        self.isSave = not self.isSave
     
     def toggleStart(self):
         self.isStart = not self.isStart
-    
-    def toggleHoldHeight(self):
-        self.isHoldHeight = not self.isHoldHeight
-        
-    def toggleHoldPosition(self):
-        self.isHoldPosition = not self.isHoldPosition
     
     def toggleCalib(self):
         self.isCalib = not self.isCalib
